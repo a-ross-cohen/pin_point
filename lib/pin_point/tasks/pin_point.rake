@@ -8,8 +8,8 @@ namespace :pin_point do
     
     TIME = Time.now.to_i
     ZIP_FILE = "/tmp/pin_point_data_#{TIME}.zip"
-    BLOCK_FILE = "/tmp/pin_point_block_#{TIME}.zip"
-    LOCATION_FILE = "/tmp/pin_point_location.zip"
+    BLOCK_FILE = "/tmp/pin_point_block_#{TIME}.csv"
+    LOCATION_FILE = "/tmp/pin_point_location_#{TIME}.csv"
     REMOTE_DATA_DOMAIN = 'geolite.maxmind.com'
     REMOTE_DATA_PATH = '/download/geoip/database/GeoLiteCity_CSV/GeoLiteCity-latest.zip'
     
@@ -39,8 +39,17 @@ namespace :pin_point do
     
     PinPoint::IpBlock.delete_all
     
+    puts "Dropping existing indexes..."
+    
+    PinPoint::IpBlock.remove_indexes
+    
+    puts "Generating new indexes..."
+    
+    PinPoint::IpBlock.create_indexes
+    
     puts "Importing IP Block data. This will take a while..."
     
+    import_start = ip_block_start = Time.now
     open BLOCK_FILE, 'r' do |file|
       while line = file.gets
         if $. > 2
@@ -55,13 +64,21 @@ namespace :pin_point do
               location: row[2].to_i
             })
           end
-          puts "#{($. - 2)} blocks imported..." if ($. - 2) % 100000 == 0
+          if ($. - 2) % 100000 == 0
+            now = Time.now
+            current_count = ($. - 2)
+            per_second = ($. - 2) / ( ( now - ip_block_start ) / 1.second )
+            seconds = ( now - ip_block_start ) % 1.minute
+            minutes = ( now - ip_block_start ) / 1.minute
+            puts "%d blocks imported in %d minutes, %d seconds. %.2f blocks/s ..." % [ current_count, minutes, seconds, per_second ]
+          end
         end
       end
     end
     
     puts "Mapping location data to IP Blocks..."
     
+    location_start = Time.now
     open LOCATION_FILE, 'r' do |file|
       while line = file.gets
         if $. > 2
@@ -70,14 +87,21 @@ namespace :pin_point do
           rescue CSV::MalformedCSVError
             Rails.logger.debug "Failed to parse: #{line}\n#{$!.message}"
           else
-            block = PinPoint::IpBlock.where( location: row[0].to_i ).update_all({
+            PinPoint::IpBlock.where( location: row[0].to_i ).update_all({
               country: row[1],
               state: row[2],
               city: row[3],
               coordinates: [row[6].to_f, row[5].to_f]
             })
           end
-          puts "#{($. - 2)} locations mapped..." if ($. - 2) % 10000 == 0
+          if ($. - 2) % 100000 == 0
+            now = Time.now
+            current_count = ($. - 2)
+            per_second = ($. - 2) / ( ( now - location_start ) / 1.second )
+            seconds = ( now - location_start ) % 1.minute
+            minutes = ( now - location_start ) / 1.minute
+            puts "%d locations mapped in %d minutes, %d seconds. %.2f locations/s ..." % [ current_count, minutes, seconds, per_second ]
+          end
         end
       end
     end

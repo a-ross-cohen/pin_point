@@ -15,6 +15,7 @@ module PinPoint
     field :country, type: String  
 
     index range_low: -1
+    index location: 1
     
     class << self
       
