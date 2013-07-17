@@ -1,6 +1,6 @@
 # PinPoint
 
-TODO: Write a gem description
+Pinpoint a users location by their IP address.
 
 ## Installation
 

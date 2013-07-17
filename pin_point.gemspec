@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = PinPoint::VERSION
   spec.authors       = ["Adam Ross Cohen", "John Cihocki"]
   spec.email         = ["ross@startupgiraffe.com", "john@startupgiraffe.com"]
-  spec.description   = %q{PinPoint maps IP blocks to locations.}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.description   = %q{Pinpoint a users location by their IP address.}
+  spec.summary       = %q{pin_point imports publicly available data about IP Blocks and their corresponding locations into mongodb. Once the dataset is imported lookups by IP address return associated location data.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
