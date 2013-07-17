@@ -28,7 +28,14 @@ Once the data is all imported you can look up blocks based on IP strings:
 
 ``` ruby
 PinPoint.ip '173.194.43.1'
-=> #<PinPoint::IpBlock _id: 51e5ec3fbe8a5cbd5417c2ee, range_low: 2915172352, range_high: 2915197695, location: 2703, coordinates: [-122.0574, 37.4192], city: "Mountain View", state: "CA", country: "US"> 
+=> #<PinPoint::IpBlock _id: 51e5ec3fbe8a5cbd5417c2ee,
+      range_low: 2915172352,
+      range_high: 2915197695,
+      location: 2703,
+      coordinates: [-122.0574, 37.4192],
+      city: "Mountain View",
+      state: "CA",
+      country: "US"> 
 ```
 
 ## Contributing
