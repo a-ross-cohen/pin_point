@@ -22,13 +22,13 @@ To import the IP Block and location mapping data just run the provided rake task
 
   $ rake pin_point:import
 
-Be aware that this imports over 2 million IP Blocks and then maps each of them to a location. This operation takes a while, even on fast machines.
+Be aware that this imports over 2 million IP Blocks and then maps each of them to a location. This operation takes a while ( 30+ minutes ), even on fast machines.
 
 Once the data is all imported you can look up blocks based on IP strings:
 
 ``` ruby
-PinPoint.ip '173.194.68.104'
-=> #<PinPoint::IpBlock _id: 51d49c03be8a5c023d1cc080, range_low: 3495038258, range_high: 3495038258, location: 618, coordinates: [], city: nil, state: nil, country: nil>
+PinPoint.ip '173.194.43.1'
+=> #<PinPoint::IpBlock _id: 51e5ec3fbe8a5cbd5417c2ee, range_low: 2915172352, range_high: 2915197695, location: 2703, coordinates: [-122.0574, 37.4192], city: "Mountain View", state: "CA", country: "US"> 
 ```
 
 ## Contributing
